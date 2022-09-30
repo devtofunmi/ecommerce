@@ -1,23 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import commerce from "../lib/commerce";
+// import ProductsList from "./components/ProductsList";
 
 const Homepage = () => {
-  const url = "pk_test_47315e75503163ee5f51b3941ea5114997e4547382e5f";
+  const [products, setProducts] = useState([]);
 
-  const headers = {
-    "X-Authorization": "{token}",
-    "Content-Type": "application/json",
-    Accept: "application/json",
+  const fetchProducts = () => {
+    commerce.products
+      .list()
+      .then((products) => {
+        setProducts(products.data);
+        console.log(products.data);
+      })
+      .catch((error) => {
+        console.log("There was an error fetching the products", error);
+      });
   };
 
-  fetch(url, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify(body),
-  })
-    .then((response) => response.json())
-    .then(dat);
-  console.log(response.json());
-
+  useEffect(() => {
+    fetchProducts();
+  }, []);
   return <div>Homepage</div>;
 };
 
