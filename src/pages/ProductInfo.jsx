@@ -20,7 +20,7 @@ const ProductInfo = () => {
     method: "GET",
     headers: headers,
   }).then((response) => console.log(response.json()));
-  return <div>ProductInfo</div>;
+  return <div> ProductInfoo </div>;
 };
 
 export default ProductInfo;
