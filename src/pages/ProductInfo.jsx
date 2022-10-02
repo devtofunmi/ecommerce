@@ -1,26 +1,59 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Flex, Heading, Img, Spinner, Text } from "@chakra-ui/react";
+import commerce from "../lib/commerce";
+import HTMLReactParser from "html-react-parser";
 
 const ProductInfo = () => {
-  const url = new URL("https://api.chec.io/v1/products/prod_f89398fs489g");
+  const [product, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const productId = "prod_AYrQlWQ7AOonbR";
 
-  const params = {
-    type: "id",
+  const fetchProducts = () => {
+    commerce.products.retrieve(productId).then((product) => {
+      setProducts(product);
+      setLoading(false);
+
+      console.log(product);
+    });
   };
-  Object.keys(params).forEach((key) =>
-    url.searchParams.append(key, params[key])
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+  return (
+    <>
+      {loading ? (
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+        />
+      ) : (
+        <Flex
+          w="100%"
+          h="auto"
+          m="20px"
+          p="30px"
+          boxShadow={"base"}
+          flexDirection={"column"}
+          alignItems={"center"}
+          borderRadius={"md"}
+          bg={"blackAlpha.500"}
+          justifyContent={"space-between"}
+        >
+          <Img src={product.image.url} />
+          <Text mt={"50px"} fontSize={"2xl"}>
+            {product.name}
+          </Text>
+          <Text mt={"20px"} fontWeight={"bold"} fontSize={"2xl"}>
+            {product.price.formatted_with_symbol}
+          </Text>
+          <Text mt="50px">{HTMLReactParser(product.description)}</Text>
+        </Flex>
+      )}
+    </>
   );
-
-  const headers = {
-    "X-Authorization": "{token}",
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  };
-
-  fetch(url, {
-    method: "GET",
-    headers: headers,
-  }).then((response) => console.log(response.json()));
-  return <div> ProductInfoo </div>;
 };
 
 export default ProductInfo;
