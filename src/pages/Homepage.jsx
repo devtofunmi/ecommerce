@@ -1,4 +1,4 @@
-import { Box, Center, Flex, Input } from "@chakra-ui/react";
+import { Box, Center, Flex, Input, Spinner } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import commerce from "../lib/commerce";
 import ProductsCard from "./ProductsCard";
@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 const Homepage = () => {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState([]);
 
   const fetchProducts = () => {
@@ -16,6 +17,7 @@ const Homepage = () => {
       .then((products) => {
         setProducts(products.data);
         console.log(products.data);
+        setLoading(false);
       })
       .catch((error) => {
         console.log("There was an error fetching the products", error);
@@ -68,19 +70,31 @@ const Homepage = () => {
         </Box>
       </Center>
 
-      <Flex alignItems={"center"} flexWrap={"wrap"} justifyContent={"center"}>
-        {filteredData().map((product) => (
-          <ProductsCard
-            key={product.id}
-            image={product.image.url}
-            name={product.name}
-            price={product.price.formatted_with_symbol}
-            description={product.description}
-            id={product.id}
-            addToCart={addToCart}
+      {loading ? (
+        <Flex justifyContent={"center"} mt={"100px"}>
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.500"
+            size="xl"
           />
-        ))}
-      </Flex>
+        </Flex>
+      ) : (
+        <Flex alignItems={"center"} flexWrap={"wrap"} justifyContent={"center"}>
+          {filteredData().map((product) => (
+            <ProductsCard
+              key={product.id}
+              image={product.image.url}
+              name={product.name}
+              price={product.price.formatted_with_symbol}
+              description={product.description}
+              id={product.id}
+              addToCart={addToCart}
+            />
+          ))}
+        </Flex>
+      )}
     </>
   );
 };
