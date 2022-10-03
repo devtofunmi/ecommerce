@@ -1,15 +1,30 @@
-import { Box, Center, Flex, Input, Spinner } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  extendTheme,
+  Flex,
+  Grid,
+  Img,
+  Input,
+  Spinner,
+  withDefaultColorScheme,
+} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import commerce from "../lib/commerce";
 import ProductsCard from "./ProductsCard";
 import { BsFillCartCheckFill } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, resolvePath } from "react-router-dom";
+import banner from "../assets/banner.webp";
 
 const Homepage = () => {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState([]);
+
+  const customTheme = extendTheme(
+    withDefaultColorScheme({ colorScheme: "red" })
+  );
 
   const fetchProducts = () => {
     commerce.products
@@ -53,21 +68,35 @@ const Homepage = () => {
   };
   return (
     <>
-      <Center>
+      <Center
+        position={"sticky"}
+        top={"0px"}
+        bgColor="blackAlpha.700"
+        zIndex={5}
+      >
         <Input
           type="text"
           placeholder="search"
+          bgColor={"blue.300"}
           w={"70%"}
           mt={"20px"}
+          mb={"20px"}
           onChange={(e) => {
             setSearchTerm(e.target.value);
           }}
         />
-        <Box mt={"15px"} ml="15px">
+        <Box ml="15px">
           <Link to={"/cart"}>
             <BsFillCartCheckFill size={"40px"} />
           </Link>
         </Box>
+      </Center>
+      <Center m={"20px"} mt={"50px"}>
+        <Flex>
+          <Box>
+            <Img src={banner} />
+          </Box>
+        </Flex>
       </Center>
 
       {loading ? (
